@@ -19,12 +19,14 @@ resource "tls_private_key" "rsa" {      ## otomatik public key olusturuyor.
 resource "local_file" "Mykeypair" {     ##File direk calistirdigin yerde olusturuyor
   content  = tls_private_key.rsa.private_key_pem    ## file yüklenecek icerik..
   filename = "FileKey.pem"                  # Buraya sanirim path uzanti yolu yazilabilir sanirim.
-  # file_permission = "0400"  # Dosya iznini chmod 400 yapiyor
+  file_permission = "0400"  # Dosya iznini chmod 400 yapiyor
 }
 
-resource "null_resource" "change_permissions" {         # Bu resource ile localde olusturdugum seyleri degistirebiliyorum
-  depends_on = [ local_file.Mykeypair ]                 # File bulamadigindan beklemesi icin yazdim
-  provisioner "local-exec" {                            # Yine ayni chmod 400 yapiyoruz
-    command = "chmod 400 /home/ec2-user/2.Bulusma/FileKey.pem"    # Buraya direk file yazsamda calisir muhtemelen.Ama denemedim.
-  }
-}
+# resource "null_resource" "change_permissions" {         
+#   depends_on = [ 
+#     local_file.Mykeypair,
+#     aws_instance.mein_VM
+#    ]                
+# }
+
+
